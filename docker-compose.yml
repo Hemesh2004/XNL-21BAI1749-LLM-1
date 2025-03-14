@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  training:
+    build: .
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - WANDB_API_KEY=${WANDB_API_KEY}
+      - MODEL_ENCRYPTION_KEY=${MODEL_ENCRYPTION_KEY}
+      - WATERMARK_KEY=${WATERMARK_KEY}
+      - DATASET_PATH=${DATASET_PATH}
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./logs:/app/logs
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
